@@ -1,0 +1,74 @@
+﻿@{
+    ViewBag.Title = "AddUser";
+}
+<script src="~/Scripts/jquery-2.1.3.js"></script>
+<script>
+        $(function () {
+            $.get("@Url.Action("GetAllUsers")"  , function(resp){
+                for (var i = 0; i < resp.length; i++) {
+                    var copy= $('div.template').clone(true, true).removeClass('template');
+                    copy.children('.Username').text(resp[i].Username);
+                    copy.children('.Name').text(resp[i].Name);
+                    copy.children('.Email').text(resp[i].Email);
+                    copy.children('.Gender').text(resp[i].Gender);
+                    copy.children('.Personnum').text(resp[i].PersonNum);
+                    copy.children('.Role').text(resp[i].Role);
+                    copy.insertBefore('.Users:last-child');
+                }
+            });
+            $('button').click(function () {
+                var dataForServer = $('input option').serialize();
+                $.post("@Url.Action("InsertUser")", dataForServer, function (resp) {
+                    if (resp.Status=="OK") {
+                        alert(resp.Status)
+                    } else {
+                        alert(resp.Status);
+                    }
+                });
+            });
+        });
+</script>
+<h2>Users table</h2>
+<div style="border:1px solid;padding:5px;">
+<div class="Users template">
+    Username:
+    <span class="Username"></span><br />
+    Name:
+    <span class="Name"></span><br/>
+    Email:
+    <span class="Email"></span><br />
+    Gender:
+    <span class="Gender"></span><br />
+    Person number:
+    <span class="Personnum"></span><br />
+    Role:
+    <span class="Role"></span><br />
+    </div>
+</div>
+<h2>AddUser</h2>
+<div>
+    <form method="post">
+        <label for="Username">Username:</label>
+        <input name="Username" /><br />
+        <label for="Password">Password:</label>
+        <input name="Password" /><br />
+        <label for="RepeatPassword">Repeat password:</label>
+        <input name="RepeatPassword" /><br />
+        <label for="Name">Name:</label>
+        <input name="Name" /><br />
+        <label for="Email">Email</label>
+        <input name="Email" /><br />
+        <label for="Gender">Gender</label>
+        <select name="Gender" >
+        <option>Male</option>
+        <option>Female</option>
+        </select><br />
+        <label for="Personnumber">Personnumber:</label>
+        <input name="Personnumber" /><br />
+        <button type="button" onclick="uploadPic">Upload Picture</button>
+        <button type="submit" onclick="clickMe">Save user</button>
+    </form>
+</div>
+<div>
+    @ViewBag.Message;
+</div>

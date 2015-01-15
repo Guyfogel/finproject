@@ -1,0 +1,97 @@
+﻿@{
+    ViewBag.Title = "AddCarType";
+}
+<script src="~/Scripts/jquery-2.1.3.js"></script>
+<script>
+    //$(function () {
+            //$.get("//Url.Action("GetAllCarTypes")"  , function(resp){
+                //for (var i = 0; i < resp.length; i++) {
+                   // var copy= $('div.template').clone(true, true).removeClass('template');
+                   // copy.children('.CarTypeId').text(resp[i].CarTypeID);
+                   // copy.children('.Manufacturer').text(resp[i].Manufacturer);
+                    //copy.children('.CarModel').text(resp[i].CarModel);
+                    //copy.children('.PricePerDay').text(resp[i].PricePerDay);
+                    //copy.children('.PricePerLateDay').text(resp[i].PricePerLateDay);
+                    //copy.children('.Gear').text(resp[i].Gear);
+                    
+                    //copy.insertBefore('.CarTypes:last-child');
+                //}
+    //});
+
+    $(function () {
+        $.get("@Url.Action("GetAllCarTypes")"  , function(resp){
+            
+            $('.Cars tr').not(':first').not(':last').remove();
+            var html = '';
+            for(var i = 0; i < resp.length; i++)
+                html += '<tr><td>' + resp[i].CarTypeID + 
+                        '</td><td>' + resp[i].Manufacturer +
+                        '</td><td>' + resp[i].CarModel +
+                        '</td><td>' + resp[i].PricePerDay +
+                        '</td><td>' + resp[i].PricePerLateDay +
+                        '</td><td>' + resp[i].Gear +'</td></tr>';
+            $("table tr:first").first().after(html);
+        
+        });
+
+            $('#cartypesend').click(function () {
+                var dataForServer = $('input option').serialize();
+                $.post("@Url.Action("InsertCarType")", dataForServer, function (resp) {
+                    if (resp.Status=="OK") {
+                        alert(resp.Status)
+                    } else {
+                        alert(resp.Status);
+                    }
+                });
+            });
+        });
+</script>
+<h2>Car Type table</h2>
+<div style="border:1px solid;padding:5px;">
+    <div>
+        <table class="cars">
+            <tr>
+                <th>Car Type Id</th>
+                <th>Manufacturer</th>
+                <th>Car Model</th>
+                <th>Price Per Day</th>
+                <th>Price per late day</th>
+                <th>Gear</th>
+
+
+            </tr>
+            <!--<tr class=" template">
+                <td class="CarTypeId"></td>
+                <td class="Manufacturer"></td>
+                <td class="CarModel"></td>
+                <td class="PricePerDay"></td>
+                <td class="PricePerLateDay"></td>
+                <td class="Gear"></td>
+
+            </tr>-->
+        </table>
+
+    </div>
+</div>
+<h2>Add Car</h2>
+<div>
+    <div>
+        <form method="post">
+            <label for="Manufacturer">Manufacturer:</label>
+            <input name="Manufacturer" /><br />
+            <label for="CarModel">Car Model:</label>
+            <input name="CarModel" /><br />
+            <label for="PricePerDay">PricePerDay:</label>
+            <input name="PricePerDay" /><br />
+            <label for="PricePerLateDay">Price per late day:</label>
+            <input name="PricePerLateDay" /><br />
+            <label for="Gear">Gear:</label>
+            <input name="Gear" /><br />
+            
+            <button id="cartypesend" type="submit">Save</button>
+        </form>
+    </div>
+    <div>
+        @ViewBag.Message;
+    </div>
+</div>

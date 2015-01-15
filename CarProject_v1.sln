@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarProject_v1", "CarProject_v1\CarProject_v1.csproj", "{5D55A2C5-F332-4821-96CB-35ADAB4C056E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{DBE0A5F3-BAE9-497A-B422-F38C70CAAECF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{CE6AA601-6832-4D59-8CAB-FEFA4336977E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5D55A2C5-F332-4821-96CB-35ADAB4C056E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D55A2C5-F332-4821-96CB-35ADAB4C056E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D55A2C5-F332-4821-96CB-35ADAB4C056E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D55A2C5-F332-4821-96CB-35ADAB4C056E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBE0A5F3-BAE9-497A-B422-F38C70CAAECF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBE0A5F3-BAE9-497A-B422-F38C70CAAECF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBE0A5F3-BAE9-497A-B422-F38C70CAAECF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBE0A5F3-BAE9-497A-B422-F38C70CAAECF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE6AA601-6832-4D59-8CAB-FEFA4336977E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE6AA601-6832-4D59-8CAB-FEFA4336977E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE6AA601-6832-4D59-8CAB-FEFA4336977E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE6AA601-6832-4D59-8CAB-FEFA4336977E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

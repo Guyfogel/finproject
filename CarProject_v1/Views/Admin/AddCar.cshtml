@@ -1,0 +1,116 @@
+﻿@{
+    ViewBag.Title = "AddCar";
+}
+<script src="~/Scripts/jquery-2.1.3.js"></script>
+<script>
+    $(function () {
+
+        $.get("@Url.Action("GetAllCars")", function addtotable(resp) {
+
+            $('.Cars tr').not(':first').not(':last').remove();
+            var html = '';
+            for (var i = 0; i < resp.length; i++)
+                html += '<tr>' + 
+                        '<td>' + resp[i].v.Manufacturer +
+                        '</td><td>' + resp[i].v.CarModel +
+                        '</td><td>' + resp[i].v.PricePerDay +
+                        '</td><td>' + resp[i].v.PricePerLateDay +
+                        '</td><td>' + resp[i].v.Gear +
+                        '</td><td>' + resp[i].u.Kilometrage +
+                        '</td><td>' + resp[i].l.LocationName +
+                        '</td></tr>';
+            $("table tr:first").first().after(html);
+
+        });
+        $.get("@Url.Action("GetAllCarTypes")", function (resp) {
+            var html = '';
+
+            for (var i = 0; i < resp.length; i++) {
+                html += '<option>' + resp[i].Manufacturer + ' ' + resp[i].CarModel + '</option>';
+
+            }
+            $("#cartypeStr").append(html);
+
+        });
+
+        $.get("@Url.Action("GetAllLocations")", function (resp) {
+            var html = '';
+
+            for (var i = 0; i < resp.length; i++) {
+                html += '<option>' + resp[i].LocationName + '</option>';
+
+            }
+            $("#LocationName").append(html);
+        });
+    });
+        //$('#Manufacturer').onChange(
+        //function manufacturerOnChange() {
+        ////$('#CarModel option').disabled.removeAttr();
+        ////var manval=$('#Manufacturer').find('option:selected').text();
+        ////load("/Admin/GetCarTypes?Manufacturer="+$('#Manufacturer').find('option:selected').text());
+        ////$.get("Url.Action("GetCarTypes")",$('#Manufacturer').find('option:selected').text(),function(resp){
+        //$.load("/Admin/GetCarTypes?Manufacturer="+$('#Manufacturer').find('option:selected').text()),function(resp){
+        //    var html2 = '';
+        //    for (var i = 0; i < resp.length; i++) {
+        //        html2 += '<option value="'+resp[i].CarModel+'">' + resp[i].CarModel + '</option>';
+        //    }
+        //    $("#CarModel").first().append(html2);
+        //}
+        //}
+    $('#carsend').click(function () {
+            
+        var dataForServer = $('input option:selected').serialize();
+        
+            $.post("@Url.Action("InsertCar")", dataForServer, function (resp) {
+                if (resp.Status == "OK") {
+                    $('#alertbox').append("Car Added");
+                    addtotable(resp);
+
+                } else {
+                    $('#alertbox').append(resp.Status.text());
+                }
+            });
+        });
+    
+</script>
+<h2>Cars table</h2>
+<div style="border:1px solid;padding:5px;">
+    <div >
+        <table class="cars">
+            <tr>
+                <!--<th>Car Id</th>-->
+                <th>Manufacturer</th>
+                <th>Car Model</th>
+                <th>Price Per Day</th>
+                <th>Price per late day</th>
+                <th>Gear</th>
+                <th>Kilometrage</th>
+                <th>Location</th>
+            </tr>
+            
+        </table>
+        
+    </div>
+</div>
+<h2>Add Car</h2>
+<div>
+    <div>
+        <form method="post">
+            <label for="cartypeStr">Manufacturer and model: </label>
+            <select id="cartypeStr" name="cartypeStr"></select><br />
+            <!--<label for="CarModel">Car Model:</label>
+            <select id="CarModel" name="CarModel">
+                <option disabled="disabled">sdgs</option>
+            </select><br />-->
+            <label for="Kilometrage">Kilometrage: </label>
+            <input name="Kilometrage" /><br />
+            <label for="LocationName">Location: </label>
+            <select id="LocationName" name="LocationName"></select><br />
+            <button id="carsend" type="submit">Save</button>
+        </form>
+    </div>
+    <div id="alertbox"></div>
+    <div>
+        @ViewBag.Message;
+    </div>
+</div>

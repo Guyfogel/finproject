@@ -1,0 +1,10 @@
+D:\personalwork\coursework2\c#\CarProject_v1\Models\bin\Debug\Models.dll
+D:\personalwork\coursework2\c#\CarProject_v1\Models\bin\Debug\Models.pdb
+D:\personalwork\coursework2\c#\CarProject_v1\Models\obj\Debug\Models.csprojResolveAssemblyReference.cache
+D:\personalwork\coursework2\c#\CarProject_v1\Models\obj\Debug\Models.dll
+D:\personalwork\coursework2\c#\CarProject_v1\Models\obj\Debug\Models.pdb
+D:\personalwork\coursework2\c#\CarProject_v1\Models\bin\Debug\Models.dll.config
+D:\personalwork\coursework2\c#\CarProject_v1\Models\bin\Debug\EntityFramework.dll
+D:\personalwork\coursework2\c#\CarProject_v1\Models\bin\Debug\EntityFramework.SqlServer.dll
+D:\personalwork\coursework2\c#\CarProject_v1\Models\bin\Debug\EntityFramework.xml
+D:\personalwork\coursework2\c#\CarProject_v1\Models\bin\Debug\EntityFramework.SqlServer.xml
