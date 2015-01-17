@@ -10,9 +10,7 @@ namespace DAL
 {
     public class CarRepository
     {
-        //public void AddUser( string username, string password, string email, string name, int personnumber, string gender, byte[] pic) 
         public void AddUser(Users user) 
-
         {
             using (CarDBContext context = new CarDBContext())
             {
