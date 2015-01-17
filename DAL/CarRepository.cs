@@ -49,19 +49,17 @@ namespace DAL
              }
         }
 
-        //public List<Users> GetAllUsers()
-        //{
-        //    using (CarDBContext context = new CarDBContext())
-        //    {
-        //        List<Users> users = new List<Users>();
-        //        foreach (var item in users)
-        //        {
-        //            GetUser
-        //        }
-        //        return users;
-        //    }
-        //}
+        public Orders GetOrdersByFilter (string carmanufacturer)
+        {
+            using (CarDBContext context = new CarDBContext())
+             {
+                var query = (from u in context.Orders
+                             where u.Car.CarType.Manufacturer == carmanufacturer
+                             select u).FirstOrDefault();
 
+                return (Orders)query;
+             }
+        }
 
         public IEnumerable<Users> GetAllUsers()
         {
