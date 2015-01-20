@@ -13,10 +13,15 @@ namespace Models
         [Key]
         public int OrderID { get; set; }
         [Required]
-        public Cars Car { get; set; }
+        public int CarID { get; set; }
+        [ForeignKey("CarID")]
+        public virtual Cars Car { get; set; }
+        [Required]
+        public int UserID { get; set; }
+        [ForeignKey("UserID")]
         public Users User { get; set; }
         public DateTime LendDate { get; set; }
         public DateTime ReturnDate { get; set; }
-        public DateTime ActualReturnDate { get; set; }
+        public DateTime? ActualReturnDate { get; set; }
     }
 }

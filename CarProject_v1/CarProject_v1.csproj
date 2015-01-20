@@ -133,6 +133,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
+    <Compile Include="Controllers\GuestController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -245,6 +246,7 @@
     <Content Include="Views\Employee\ReturnCar.cshtml" />
     <Content Include="Views\Admin\AddCarType.cshtml" />
     <Content Include="Views\Admin\AddLocation.cshtml" />
+    <Content Include="Views\Admin\AddOrder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -22,7 +22,7 @@ namespace DAL
 
         public CarDBContext():base("name=CarCn")
         {
-
+            this.Configuration.LazyLoadingEnabled = false;
         }
         
     }

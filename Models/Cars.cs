@@ -16,7 +16,6 @@ namespace Models
         [Required]
         public int CarTypeID { get; set; }
         [ForeignKey("CarTypeID")]
-        
         public virtual CarTypes CarType { get; set; }
         [Required]
         public int Kilometrage { get; set; }

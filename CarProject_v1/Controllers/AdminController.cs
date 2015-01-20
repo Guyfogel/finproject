@@ -5,6 +5,9 @@ using System.Web;
 using System.Web.Mvc;
 using DAL;
 using Models;
+using System.Globalization;
+using System.Data.Entity.Validation;
+using System.Diagnostics;
 
 namespace CarProject_v1.Controllers
 {
@@ -27,6 +30,54 @@ namespace CarProject_v1.Controllers
             CarRepository repo = new CarRepository();
             IEnumerable<Users> Users = repo.GetAllUsers();
             return Json(Users, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult AddOrder()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult AddOrder(string carStr, string lenddate, string returndate, string username)
+        {
+            CarRepository repo = new CarRepository();
+            try
+            {
+                Cars car = new Cars();
+                string[] cartypeStrArr = carStr.Split(' ');
+                car = repo.GetCarByCartype(cartypeStrArr[0], cartypeStrArr[1]);
+                Users user = new Users();
+                user = repo.GetUser(username);
+                DateTime Ldate = DateTime.ParseExact(lenddate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                DateTime Rdate = DateTime.ParseExact(returndate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                Orders order = new Orders() { Car = car, CarID = car.CarID, UserID = user.UserID, User = user, LendDate = Ldate, ReturnDate = Rdate };
+                repo.AddOrder(order);
+                return Json(new { Status = "OK", Car = car });
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                foreach (var validationErrors in dbEx.EntityValidationErrors)
+                {
+                    foreach (var validationError in validationErrors.ValidationErrors)
+                    {
+                        Trace.TraceInformation("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
+                    }
+
+                }
+                return Json(new { Status = "Fail" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = "Fail" });
+            }
+        }
+        public ActionResult GetAllOrders()
+        {
+            //if (!Request.IsAjaxRequest())
+            //{
+            //    return null;
+            //}
+            CarRepository repo = new CarRepository();
+            IEnumerable<object> orders = repo.GetAllOrders();
+            return Json(orders, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult GetAllCars()
@@ -74,11 +125,13 @@ namespace CarProject_v1.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddUser(Users user)
+        public ActionResult AddUser(string username, string password, string repeatpassword, string name, string email, Genders gender, string Personnumber, byte[] pic)
         {
             CarRepository repo = new CarRepository();
             try
             {
+                if (password != repeatpassword) throw new Exception();
+                Users user = new Users() { Username = username, Password = password, Name = name, Email = email, PersonNum = int.Parse(Personnumber), Gender = gender, Pic = pic };
                 repo.AddUser(user);
                 return Json(new { Status = "OK", User = user });
             }
@@ -87,8 +140,22 @@ namespace CarProject_v1.Controllers
                 return Json(new { Status = "Fail" });
             }
         }
+        //[HttpPost]
+        //public ActionResult AddUser(Users user)
+        //{
+        //    CarRepository repo = new CarRepository();
+        //    try
+        //    {
+        //        repo.AddUser(user);
+        //        return Json(new { Status = "OK", User = user });
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return Json(new { Status = "Fail" });
+        //    }
+        //}
 
-        [HttpPost]
+        
         //public ActionResult AddCar(Cars car)
         //{
         //    CarRepository repo = new CarRepository();
@@ -102,7 +169,7 @@ namespace CarProject_v1.Controllers
         //        return Json(new { Status = "Fail" });
         //    }
         //}
-
+        [HttpPost]
         public ActionResult AddCar(string cartypeStr,string kilometrage,string locationName)
         {
             CarRepository repo = new CarRepository();

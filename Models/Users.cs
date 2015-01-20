@@ -15,7 +15,7 @@ namespace Models
         public int UserID { get; set; }
         [Required,StringLength(12)]
         public string Username { get; set; }
-        [Required, NotMapped]
+        [Required]
         public string Password { get; set; }
         [Required]
         public int PersonNum { get; set; }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Models;
-
+using System.Globalization;
 
 namespace DAL
 {
@@ -47,16 +47,56 @@ namespace DAL
              }
         }
 
-        public Orders GetOrdersByFilter (string carmanufacturer)
+        public IEnumerable<Orders> GetOrdersByFilter (string carmanufacturer, string carmodel, DateTime lenddate, DateTime returndate)
         {
             using (CarDBContext context = new CarDBContext())
              {
-                var query = (from u in context.Orders
-                             where u.Car.CarType.Manufacturer == carmanufacturer
-                             select u).FirstOrDefault();
+                var query =  from u in context.Orders
+                             where (u.Car.CarType.Manufacturer == carmanufacturer)&&(u.Car.CarType.CarModel==carmodel)&&(u.LendDate==lenddate)&&(u.ReturnDate==returndate)
+                             select u;
 
-                return (Orders)query;
+                return query.ToArray();
              }
+        }
+        public IEnumerable<object> GetAllOrders()
+        {
+                using (CarDBContext context = new CarDBContext())
+                {
+                    var query = (from o in context.Orders
+                                 join c in context.Cars on o.CarID equals c.CarID
+                                 join ct in context.CarTypes on c.CarTypeID equals ct.CarTypeID
+                                 join u in context.Users on o.UserID equals u.UserID
+                                 //where (u.CarModel == carmodel) && (u.Manufacturer == manufacturer)
+                                 select new { OrderID = o.OrderID, CarID = c.CarID, Manufacturer = ct.Manufacturer, CarModel = ct.CarModel, PricePerDay = ct.PricePerDay, PricePerLateDay = ct.PricePerLateDay, Username = u.Username, LendDate = o.LendDate, ReturnDate = o.ReturnDate, ActualReturnDate=o.ActualReturnDate});
+                                 
+
+                    return query.ToArray();
+                }
+        }
+        public Orders GetOrderbyID()
+        {
+            using (CarDBContext context = new CarDBContext())
+            {
+                var query = (from u in context.Orders
+
+                             select u).FirstOrDefault();
+                return query;
+            }
+        }
+
+        public void AddOrder(Orders order)
+        {
+            using (CarDBContext context = new CarDBContext())
+            {
+                //Users user = new Users() { Username = username, Password = password, Email = email, PersonNum = personnumber, Gender=(Genders)Enum.Parse(typeof(Genders), gender, true),Role=Roles.Customer };
+                //if (pic!=null)
+                //{
+                //    user.Pic = pic;
+                //}
+                //Gender gen = new Gender
+                context.Orders.Add(order);
+                context.SaveChanges();
+            }
         }
 
         public IEnumerable<Users> GetAllUsers()
@@ -90,30 +130,43 @@ namespace DAL
                 return query;
             }
         }
-        
-        public void AddOrder(Cars car, Users user, DateTime StartDate, DateTime EndDate)
+
+        public Cars GetCarByCartype(string manufacturer, string carmodel)
         {
             using (CarDBContext context = new CarDBContext())
             {
-                if (car == null) return;
-                if (user == null) return;
-                Orders order = new Orders() { Car=car, User=user, LendDate=StartDate, ReturnDate=EndDate };
-                context.Orders.Add(order);
-                context.SaveChanges();
-            }
-
-        }
-
-        public Orders GetOrder()
-        {
-            using (CarDBContext context = new CarDBContext())
-            {
-                var query = (from u in context.Orders
-
+                var query = (from u in context.Cars
+                             where (u.CarType.Manufacturer == manufacturer) && (u.CarType.CarModel == carmodel)
                              select u).FirstOrDefault();
                 return query;
             }
         }
+
+        public Cars GetCarByID(int carID)
+        {
+            using (CarDBContext context = new CarDBContext())
+            {
+                var query = (from u in context.Cars
+                             where u.CarID==carID
+                             select u).FirstOrDefault();
+                return query;
+            }
+        }
+        
+        //public void AddOrder(Cars car, Users user, DateTime StartDate, DateTime EndDate)
+        //{
+        //    using (CarDBContext context = new CarDBContext())
+        //    {
+        //        if (car == null) return;
+        //        if (user == null) return;
+        //        Orders order = new Orders() { Car=car, User=user, LendDate=StartDate, ReturnDate=EndDate };
+        //        context.Orders.Add(order);
+        //        context.SaveChanges();
+        //    }
+
+        //}
+
+        
 
         
 
