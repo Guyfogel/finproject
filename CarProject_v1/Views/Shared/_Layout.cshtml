@@ -6,11 +6,17 @@
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <script>
+        function signout() { $.post("@Url.Action("signOut")");}
+    </script>
 </head>
 <body>
     @RenderBody()
 
     @Scripts.Render("~/bundles/jquery")
     @RenderSection("scripts", required: false)
+    <div>
+        <button onclick="signout">Sign Out</button>
+    </div>
 </body>
 </html>

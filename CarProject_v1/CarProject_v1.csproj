@@ -247,6 +247,8 @@
     <Content Include="Views\Admin\AddCarType.cshtml" />
     <Content Include="Views\Admin\AddLocation.cshtml" />
     <Content Include="Views\Admin\AddOrder.cshtml" />
+    <Content Include="Views\Guest\AddUser.cshtml" />
+    <Content Include="Views\Guest\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

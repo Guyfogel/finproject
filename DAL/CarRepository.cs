@@ -10,6 +10,26 @@ namespace DAL
 {
     public class CarRepository
     {
+        public bool logValidation(string name, string password)
+        {
+            using (CarDBContext context = new CarDBContext())
+            {
+                try
+                {
+                    context.Users.First(u => u.Username == name && u.Password == password);
+                    return true;
+                }
+                catch (ArgumentNullException)
+                {
+                    return false;
+                }
+                catch (InvalidOperationException)
+                {
+                    return false; 
+                }
+            }
+        }
+
         public void AddUser(Users user) 
         {
             using (CarDBContext context = new CarDBContext())
@@ -152,23 +172,6 @@ namespace DAL
                 return query;
             }
         }
-        
-        //public void AddOrder(Cars car, Users user, DateTime StartDate, DateTime EndDate)
-        //{
-        //    using (CarDBContext context = new CarDBContext())
-        //    {
-        //        if (car == null) return;
-        //        if (user == null) return;
-        //        Orders order = new Orders() { Car=car, User=user, LendDate=StartDate, ReturnDate=EndDate };
-        //        context.Orders.Add(order);
-        //        context.SaveChanges();
-        //    }
-
-        //}
-
-        
-
-        
 
         public Locations GetLocation(string locationname)
         {
@@ -293,6 +296,8 @@ namespace DAL
             }
         }
 
+
+        
     }
     
 }

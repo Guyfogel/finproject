@@ -8,9 +8,11 @@ using Models;
 using System.Globalization;
 using System.Data.Entity.Validation;
 using System.Diagnostics;
+using System.Web.Security;
 
 namespace CarProject_v1.Controllers
 {
+    [Authorize]
     public class AdminController : Controller
     {
         //
@@ -212,6 +214,24 @@ namespace CarProject_v1.Controllers
 
         public ActionResult AddCarType()
         {
+            return View();
+        }
+
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        public ActionResult signOut()
+        {
+            FormsAuthentication.SignOut();
+            return Redirect("~/Guest/Index");
+        }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult AdminIndex()
+        {
+            ViewBag.Message = "This can be viewed only by users in Admin role only";
             return View();
         }
     }

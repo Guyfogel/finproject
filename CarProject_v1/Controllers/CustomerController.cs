@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace CarProject_v1.Controllers
 {
+    [Authorize]
     public class CustomerController : Controller
     {
         //
@@ -13,6 +14,13 @@ namespace CarProject_v1.Controllers
 
         public ActionResult Index()
         {
+            return View();
+        }
+
+        [Authorize(Roles = "Customer")]
+        public ActionResult CustomerIndex()
+        {
+            ViewBag.Message = "This can be viewed only by users in Customer role only";
             return View();
         }
 
