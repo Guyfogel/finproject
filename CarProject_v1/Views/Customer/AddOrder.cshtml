@@ -1,5 +1,148 @@
 ﻿@{
     ViewBag.Title = "AddOrder";
 }
+<script src="~/Scripts/jquery-2.1.3.js"></script>
+<script>
+    $(function () {
 
-<h2>AddOrder</h2>
+        $.get("@Url.Action("GetAllCars")", function (resp) {
+
+            $('#cars tr').not(':first').not(':last').remove();
+            var html = '';
+            for (var i = 0; i < resp.length; i++)
+                html += '<tr><td>' + resp[i].u.CarID +
+                        '</td><td>' + resp[i].v.Manufacturer +
+                        '</td><td>' + resp[i].v.CarModel +
+                        '</td><td>' + resp[i].v.PricePerDay +
+                        '</td><td>' + resp[i].v.PricePerLateDay +
+                        '</td><td>' + resp[i].v.Gear +
+                        '</td><td>' + resp[i].u.Kilometrage +
+                        '</td><td>' + resp[i].l.LocationName +
+                        '</td></tr>';
+            $("#cars tr:first").first().after(html);
+        });
+
+        $.get("@Url.Action("GetAllCars")", function (resp) {
+            var html = '';
+
+            for (var i = 0; i < resp.length; i++) {
+                html += '<option>' + resp[i].v.Manufacturer + ' ' + resp[i].v.CarModel + '</option>';
+
+            }
+            $("#carStr").append(html);
+
+        });
+
+        $('#Calculate').click(function () {
+            var dataforserver = $('#carStr').serialize();
+            $.post("@Url.Action("GetCarType")", dataforserver, function (resp, err) {
+                if (err)
+                    console.log(err);
+
+                var unitPrice = resp.PricePerDay;
+                var lenddate = new Date($('#lenddate').val());
+                var returndate = new Date($('#returndate').val());
+                var diff = new Date(returndate - lenddate);
+                var productTotal;
+                var days = diff / 1000 / 60 / 60 / 24;
+                if (unitPrice && days) {
+                    productTotal = parseFloat(unitPrice) * parseFloat(days);
+                } else {
+                    productTotal = '';
+                }
+                $('#Sum').val(productTotal);
+
+            });
+
+            /*$.get("Url.Action("GetAllUsers")", function (resp) {
+                var html = '';
+
+                for (var i = 0; i < resp.length; i++) {
+                    html += '<option>' + resp[i].Username + '</option>';
+
+                }
+                $("#Username").append(html);
+            });*/
+
+            $('#ordersend').click(function () {
+
+                var dataForServer = $('input option:selected').serialize();
+
+                $.post("@Url.Action("InsertOrder")", dataForServer, function (resp, err) {
+
+                    if (err)
+                        console.log(err);
+
+                    if (resp.Status == "OK") {
+                        $('#alertbox').append("Order Added");
+                        addtotable(resp);
+
+                    } else {
+                        $('#alertbox').append(resp.Status.text());
+                    }
+                });
+            });
+
+            //$('#Manufacturer').onChange(
+            //function manufacturerOnChange() {
+            ////$('#CarModel option').disabled.removeAttr();
+            ////var manval=$('#Manufacturer').find('option:selected').text();
+            ////load("/Admin/GetCarTypes?Manufacturer="+$('#Manufacturer').find('option:selected').text());
+            ////$.get("Url.Action("GetCarTypes")",$('#Manufacturer').find('option:selected').text(),function(resp){
+            //$.load("/Admin/GetCarTypes?Manufacturer="+$('#Manufacturer').find('option:selected').text()),function(resp){
+            //    var html2 = '';
+            //    for (var i = 0; i < resp.length; i++) {
+            //        html2 += '<option value="'+resp[i].CarModel+'">' + resp[i].CarModel + '</option>';
+            //    }
+            //    $("#CarModel").first().append(html2);
+            //}
+            //}
+
+        });
+
+    });
+</script>
+
+<h2>AvailableCars</h2>
+<div style="border:1px solid;padding:5px;">
+    <div>
+        <table id="cars">
+            <tr>
+                <th>Car Id</th>
+                <th>Manufacturer</th>
+                <th>Car Model</th>
+                <th>Price Per Day</th>
+                <th>Price per late day</th>
+                <th>Gear</th>
+                <th>Kilometrage</th>
+                <th>Location</th>
+            </tr>
+
+        </table>
+
+    </div>
+</div>
+<h2>Add Order</h2>
+<div>
+    <div>
+        <form method="post">
+            <label for="carStr">Manufacturer and model: </label>
+            <select id="carStr" name="carStr"></select><br />
+            <!--<label for="CarModel">Car Model:</label>
+            <select id="CarModel" name="CarModel">
+                <option disabled="disabled">sdgs</option>
+            </select><br />-->
+            <label for="lenddate">Pick lend date: </label>
+            <input id="lenddate" name="lenddate" type="date" /><br />
+            <label for="returndate">Pick return date: </label>
+            <input id="returndate" name="returndate" type="date" /><br />
+            <button id="Calculate" type="button">Calculate Price</button>
+            <input id="Sum" />
+            <button id="ordersend" type="submit">Save</button>
+        </form>
+    </div>
+    <div id="alertbox"></div>
+    <div>
+        @ViewBag.Message;
+    </div>
+</div>

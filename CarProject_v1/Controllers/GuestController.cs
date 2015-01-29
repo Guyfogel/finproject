@@ -7,10 +7,13 @@ using System.Web.Security;
 using Models;
 using DAL;
 using System.IO;
-using Models;
 
 namespace CarProject_v1.Controllers
 {
+    public class UserData
+    {
+        public Users userinfo { get; set; }
+    }
     public class GuestController : Controller
     {
         //

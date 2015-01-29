@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "ViewOrders";
+}
+<script src="~/Scripts/jquery-2.1.3.js"></script>
+<script>
+    $(function () {
+
+        $.get("@Url.Action("GetAllOrdersByUser")", function (resp) {
+
+            $('#orders tr').not(':first').not(':last').remove();
+            var html = '';
+            for (var i = 0; i < resp.length; i++) {
+                var LendDate = new Date(parseInt(resp[i].LendDate.substr(6)));
+                LendDate = LendDate.getMonth() +
+                         1 +
+                       "/" +
+           LendDate.getDate() +
+                       "/" +
+       LendDate.getFullYear();
+                var ReturnDate = new Date(parseInt(resp[i].ReturnDate.substr(6)));
+                ReturnDate = ReturnDate.getMonth() +
+                         1 +
+                       "/" +
+           ReturnDate.getDate() +
+                       "/" +
+       ReturnDate.getFullYear();
+                var ActualReturnDate;
+                if (resp[i].ActualReturnDate != null) {
+                    ActualReturnDate = new Date(parseInt(resp[i].ActualReturnDate.substr(6)));
+                    ActualReturnDate = ActualReturnDate.getMonth() +
+                         1 +
+                       "/" +
+           ActualReturnDate.getDate() +
+                       "/" +
+       ActualReturnDate.getFullYear();
+                }
+                else {
+                    ActualReturnDate = "Not returned yet";
+                }
+                html += '<tr><td>'  + resp[i].Manufacturer +
+                        '</td><td>' + resp[i].CarModel +
+                        '</td><td>' + resp[i].PricePerDay +
+                        '</td><td>' + resp[i].PricePerLateDay +
+                        '</td><td>' + resp[i].Username +
+                        '</td><td>' + LendDate +
+                        '</td><td>' + ReturnDate +
+                        '</td><td>' + ActualReturnDate +
+                        '</td></tr>';
+            }
+            $("#orders tr:first").first().after(html);
+        });
+    });
+
+    </script>
+    <h2>View Past Orders</h2>
+<div style="border:1px solid;padding:5px;">
+    <div>
+        <table id="orders">
+            <tr>
+                <th>Manufacturer</th>
+                <th>Car Model</th>
+                <th>Price Per Day</th>
+                <th>Price per late day</th>
+                <th>Username</th>
+                <th>Lend Date</th>
+                <th>Return Date</th>
+                <th>Actual Return Date</th>
+            </tr>
+
+        </table>
+
+    </div>
+</div>

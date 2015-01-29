@@ -1,5 +1,139 @@
 ﻿@{
-    ViewBag.Title = "ReturnCar";
+    ViewBag.Title = "Return Car";
 }
+<script src="~/Scripts/jquery-2.1.3.js"></script>
+<script>
+    $(function () {
 
-<h2>ReturnCar</h2>
+        $.get("@Url.Action("GetAllOrders")", function (resp) {
+
+            $('#orders tr').not(':first').not(':last').remove();
+            var html = '';
+            for (var i = 0; i < resp.length; i++) {
+                var LendDate = new Date(parseInt(resp[i].LendDate.substr(6)));
+                LendDate = LendDate.getMonth() +
+                         1 +
+                       "/" +
+           LendDate.getDate() +
+                       "/" +
+       LendDate.getFullYear();
+                var ReturnDate = new Date(parseInt(resp[i].ReturnDate.substr(6)));
+                ReturnDate = ReturnDate.getMonth() +
+                         1 +
+                       "/" +
+           ReturnDate.getDate() +
+                       "/" +
+       ReturnDate.getFullYear();
+                var ActualReturnDate;
+                if (resp[i].ActualReturnDate != null) {
+                    ActualReturnDate = new Date(parseInt(resp[i].ActualReturnDate.substr(6)));
+                    ActualReturnDate = ActualReturnDate.getMonth() +
+                         1 +
+                       "/" +
+           ActualReturnDate.getDate() +
+                       "/" +
+       ActualReturnDate.getFullYear();
+                }
+                else {
+                    ActualReturnDate = "Not returned yet";
+                }
+                html += '<tr><td>' + resp[i].OrderID +
+                        '</td><td>' + resp[i].CarID +
+                        '</td><td>' + resp[i].Manufacturer +
+                        '</td><td>' + resp[i].CarModel +
+                        '</td><td>' + resp[i].PricePerDay +
+                        '</td><td>' + resp[i].PricePerLateDay +
+                        '</td><td>' + resp[i].Username +
+                        '</td><td>' + LendDate +
+                        '</td><td>' + ReturnDate +
+                        '</td><td>' + ActualReturnDate +
+                        '</td></tr>';
+            }
+            $("#orders tr:first").first().after(html);
+            var html2 = '';
+
+            for (var i = 0; i < resp.length; i++) {
+                html2 += '<option>' + resp[i].OrderID + '</option>';
+
+            }
+            $("#OrderID").append(html2);
+        });
+
+         /*$('#Calculate').click(function () {
+            var dataforserver = $('#carStr').serialize();
+            $.post("Url.Action("GetCarType")", dataforserver, function (resp, err) {
+                if (err)
+                    console.log(err);
+
+                var unitPrice = resp.PricePerDay;
+                var lenddate = new Date($('#lenddate').val());
+                var returndate = new Date($('#returndate').val());
+                var diff = new Date(returndate - lenddate);
+                var productTotal;
+                var days = diff / 1000 / 60 / 60 / 24;
+                if (unitPrice && days) {
+                    productTotal = parseFloat(unitPrice) * parseFloat(days);
+                } else {
+                    productTotal = '';
+                }
+                $('#Sum').val(productTotal);
+
+            });*/
+
+           $('#returncar').click(function () {
+
+                var dataForServer = $('form').serialize();
+
+                $.post("@Url.Action("ReturnCar")", dataForServer, function (resp, err) {
+
+                    if (err!="success") {
+                        console.log(err);
+                        $('#alertbox').append(err);
+                    }
+                    else {
+                        window.location.href = resp;
+                    }
+                });
+            });
+       });
+
+</script>
+
+<h2>Orders table</h2>
+<div style="border:1px solid;padding:5px;">
+    <div>
+        <table id="orders">
+            <tr>
+                <th>OrderId</th>
+                <th>CarId</th>
+                <th>Manufacturer</th>
+                <th>Car Model</th>
+                <th>Price Per Day</th>
+                <th>Price per late day</th>
+                <th>Username</th>
+                <th>Lend Date</th>
+                <th>Return Date</th>
+                <th>Actual Return Date</th>
+            </tr>
+
+        </table>
+
+    </div>
+</div>
+
+<h2>Return Car</h2>
+<div>
+    <div>
+        <form method="post">
+            <label for="actualreturndate">Actual return date: </label>
+            <input id="actualreturndate" name="actualreturndate" type="date" /><br />
+            <label for="OrderID">OrderID: </label>
+            <select id="OrderID" name="OrderID"></select><br />
+            <button id="returncar" type="button">Save</button>
+        </form>
+    </div>
+    <div id="alertbox"></div>
+    <div>
+        @ViewBag.Message
+    </div>
+</div>

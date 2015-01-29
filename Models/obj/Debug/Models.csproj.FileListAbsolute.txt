@@ -18,3 +18,5 @@ D:\personalwork\coursework2\c#\CarProjectLatest\Models\bin\Debug\EntityFramework
 D:\personalwork\coursework2\c#\CarProjectLatest\Models\obj\Debug\Models.csprojResolveAssemblyReference.cache
 D:\personalwork\coursework2\c#\CarProjectLatest\Models\obj\Debug\Models.dll
 D:\personalwork\coursework2\c#\CarProjectLatest\Models\obj\Debug\Models.pdb
+D:\personalwork\coursework2\c#\CarProjectLatest\Models\bin\Debug\Newtonsoft.Json.dll
+D:\personalwork\coursework2\c#\CarProjectLatest\Models\bin\Debug\Newtonsoft.Json.xml

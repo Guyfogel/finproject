@@ -23,28 +23,56 @@
             
             $('.Cars tr').not(':first').not(':last').remove();
             var html = '';
-            for(var i = 0; i < resp.length; i++)
-                html += '<tr><td>' + resp[i].CarTypeID + 
+            var html2 = '';
+            for (var i = 0; i < resp.length; i++) {
+                html += '<tr><td>' + resp[i].CarTypeID +
                         '</td><td>' + resp[i].Manufacturer +
                         '</td><td>' + resp[i].CarModel +
                         '</td><td>' + resp[i].PricePerDay +
                         '</td><td>' + resp[i].PricePerLateDay +
-                        '</td><td>' + resp[i].Gear +'</td></tr>';
+                        '</td><td>' + resp[i].Gear + '</td></tr>';
+                html2 += '<option>' + resp[i].CarTypeID + '</option>';
+            }
             $("table tr:first").first().after(html);
-        
+            $("#CarTypeID").append(html2);
         });
+    
 
-            $('#cartypesend').click(function () {
-                var dataForServer = $('input option').serialize();
-                $.post("@Url.Action("InsertCarType")", dataForServer, function (resp) {
-                    if (resp.Status=="OK") {
-                        alert(resp.Status)
-                    } else {
-                        alert(resp.Status);
-                    }
-                });
+        $('#cartypeadd').click(function () {
+            var dataForServer = $('form').serialize();
+            $.post("@Url.Action("AddCarType")", dataForServer, function (resp) {
+                if (resp.Status=="OK") {
+                    alert(resp.Status)
+                } else {
+                    alert(resp.Status);
+                }
             });
         });
+        
+
+        $('#cartypeupdate').click(function () {
+            var dataForServer = $('form').serialize();
+            $.post("@Url.Action("UpdateCarType")", dataForServer, function (resp) {
+                if (resp.Status=="OK") {
+                    alert(resp.Status)
+                } else {
+                    alert(resp.Status);
+                }
+            });
+        });
+
+        $('#cartyperemove').click(function () {
+            var dataForServer = $('form').serialize();
+            $.post("@Url.Action("RemoveCarType")", dataForServer, function (resp) {
+                if (resp.Status=="OK") {
+                    alert(resp.Status)
+                } else {
+                    alert(resp.Status);
+                }
+            });
+        });
+    });
+     
 </script>
 <h2>Car Type table</h2>
 <div style="border:1px solid;padding:5px;">
@@ -77,21 +105,30 @@
 <div>
     <div>
         <form method="post">
+            <label for="CarTypeID">CarTypeID</label>
+            <select id="CarTypeID" name="CarTypeID">
+            <option></option>
+            </select><br />
             <label for="Manufacturer">Manufacturer:</label>
-            <input name="Manufacturer" /><br />
+            <input id="Manufacturer" name="Manufacturer" /><br />
             <label for="CarModel">Car Model:</label>
-            <input name="CarModel" /><br />
+            <input id="CarModel" name="CarModel" /><br />
             <label for="PricePerDay">PricePerDay:</label>
-            <input name="PricePerDay" /><br />
+            <input id="PricePerDay" name="PricePerDay" /><br />
             <label for="PricePerLateDay">Price per late day:</label>
-            <input name="PricePerLateDay" /><br />
+            <input id="PricePerLateDay" name="PricePerLateDay" /><br />
             <label for="Gear">Gear:</label>
-            <input name="Gear" /><br />
-            
-            <button id="cartypesend" type="submit">Save</button>
+            <select id="Gear" name="Gear">
+            <option></option>
+            <option>Auto</option>
+            <option>Manual</option>
+            </select><br />
+            <button id="cartypeadd" type="button">Add</button>
+            <button id="cartypeupdate" type="button">Update</button>
+            <button id="cartyperemove" type="button">Remove</button>
         </form>
     </div>
     <div>
-        @ViewBag.Message;
+        @ViewBag.Message
     </div>
 </div>

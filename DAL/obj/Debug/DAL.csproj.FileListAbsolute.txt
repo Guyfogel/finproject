@@ -30,3 +30,5 @@ D:\personalwork\coursework2\c#\CarProjectLatest\DAL\obj\Debug\DAL.Migrations.Add
 D:\personalwork\coursework2\c#\CarProjectLatest\DAL\obj\Debug\DAL.csproj.GenerateResource.Cache
 D:\personalwork\coursework2\c#\CarProjectLatest\DAL\obj\Debug\DAL.dll
 D:\personalwork\coursework2\c#\CarProjectLatest\DAL\obj\Debug\DAL.pdb
+D:\personalwork\coursework2\c#\CarProjectLatest\DAL\bin\Debug\Newtonsoft.Json.dll
+D:\personalwork\coursework2\c#\CarProjectLatest\DAL\bin\Debug\Newtonsoft.Json.xml

@@ -8,6 +8,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using System.Data.Entity;
 using DAL;
+using Newtonsoft.Json.Converters;
 
 namespace CarProject_v1
 {
@@ -22,9 +23,15 @@ namespace CarProject_v1
 
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            //HttpConfiguration config = GlobalConfiguration.Configuration;
+            ////config.Formatters.JsonFormatter.SerializerSettings.Converters.Add
+            ////                (new Newtonsoft.Json.Converters.StringEnumConverter());
+            //var jsonFormatter = config.Formatters.JsonFormatter;
+            //jsonFormatter.SerializerSettings.Converters.Add(new StringEnumConverter { CamelCaseText = true });
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             //Database.SetInitializer(new CarDBContextInitializer());
+            
         }
     }
 }

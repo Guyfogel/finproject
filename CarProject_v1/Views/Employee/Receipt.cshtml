@@ -1,0 +1,85 @@
+﻿@model Models.Receipt
+
+@{
+    ViewBag.Title = "Receipt";
+}
+
+<script src="~/Scripts/jquery-2.1.3.js"></script>
+<script>
+    $(function () {
+
+        var dataForServer = $("#orderID").serialize();
+
+        $.get("@Url.Action("GetOrderForReceipt")", dataForServer, function (resp) {
+
+            $('#orders tr').not(':first').not(':last').remove();
+            var html = '';
+            //for (var i = 0; i < resp.length; i++) {
+                var LendDate = new Date(parseInt(resp.LendDate.substr(6)));
+                LendDate = LendDate.getMonth() +
+                         1 +
+                       "/" +
+           LendDate.getDate() +
+                       "/" +
+       LendDate.getFullYear();
+                var ReturnDate = new Date(parseInt(resp.ReturnDate.substr(6)));
+                ReturnDate = ReturnDate.getMonth() +
+                         1 +
+                       "/" +
+           ReturnDate.getDate() +
+                       "/" +
+       ReturnDate.getFullYear();
+                var ActualReturnDate;
+                if (resp.ActualReturnDate != null) {
+                    ActualReturnDate = new Date(parseInt(resp.ActualReturnDate.substr(6)));
+                    ActualReturnDate = ActualReturnDate.getMonth() +
+                         1 +
+                       "/" +
+           ActualReturnDate.getDate() +
+                       "/" +
+       ActualReturnDate.getFullYear();
+                }
+                else {
+                    ActualReturnDate = "Not returned yet";
+                }
+                html += '<tr><td>' + resp.OrderID +
+                        '</td><td>' + resp.Username +
+                        '</td><td>' + resp.Manufacturer +
+                        '</td><td>' + resp.CarModel +
+                        '</td><td>' + resp.PricePerDay +
+                        '</td><td>' + resp.PricePerLateDay +
+                        '</td><td>' + LendDate +
+                        '</td><td>' + ReturnDate +
+                        '</td><td>' + ActualReturnDate +
+                        '</td><td>' + @Model.FinalPrice 
+                        '</td></tr>';
+            //}
+            $("#order tr:first").first().after(html);
+        });
+    });
+</script>
+
+<h2>Receipt for Order</h2>
+
+<div>
+    <input id="orderID" name="orderID" style="display:none;" value="@Model.OrderID" />
+    <table id="order">
+        <thead>
+            <th>OrderID</th>
+            <th>Username</th>
+            <th>Manufacturer</th>
+            <th>Car Model</th>
+            <th>Price Per Day</th>
+            <th>Price Per Late Day</th>
+            <th>Lend Date</th>
+            <th>Return Date</th>
+            <th>Actual Return Date</th>
+            <th>Final Price</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

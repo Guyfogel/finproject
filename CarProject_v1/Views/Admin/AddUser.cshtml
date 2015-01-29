@@ -8,20 +8,25 @@
 
                 $('.Users tr').not(':first').not(':last').remove();
                 var html = '';
-                for (var i = 0; i < resp.length; i++)
+                var html2 = '';
+                for (var i = 0; i < resp.length; i++) {
                     html += '<tr>' +
-                            '<td>' + resp[i].Username +
+                            '<td>' + resp[i].UserID +
+                            '</td><td>' + resp[i].Username +
                             '</td><td>' + resp[i].Name +
                             '</td><td>' + resp[i].Email +
-                            '</td><td>' + resp[i].Gender +
+                            '</td><td>' + resp[i].GenderString +
                             '</td><td>' + resp[i].PersonNum +
-                            '</td><td>' + resp[i].Role +
+                            '</td><td>' + resp[i].RoleString +
                             '</td></tr>';
-                $("table tr:first").first().after(html);
+                    html2 += '<option>' + resp[i].UserID + '</option>';
+                }
+                $("#Userstable tr:first").first().after(html);
+                $("#UserID").append(html2);
             });
 
-            $('button').click(function () {
-                var dataForServer = $('input option:selected').serialize();
+            $('#AddUser').click(function () {
+                var dataForServer = $('form').serialize();
                 $.post("@Url.Action("InsertUser")", dataForServer, function (resp) {
                     if (resp.Status == "OK") {
                         alert(resp.Status)
@@ -30,15 +35,35 @@
                     }
                 });
             });
+            $('#UpdateUser').click(function () {
+                var dataForServer = $('form').serialize();
+                $.post("@Url.Action("UpdateUser")", dataForServer, function (resp) {
+                    if (resp.Status == "OK") {
+                        alert(resp.Status)
+                    } else {
+                        alert(resp.Status);
+                    }
+                });
+            });
+        $('#RemoveUser').click(function () {
+            var dataForServer = $('form').serialize();
+            $.post("@Url.Action("RemoveUser")", dataForServer, function (resp) {
+                if (resp.Status == "OK") {
+                    alert(resp.Status)
+                } else {
+                    alert(resp.Status);
+                }
+            });
+        });
         });
     
 </script>
 <h2>Users table</h2>
 <div style="border:1px solid;padding:5px;">
     <div>
-        <table class="Users">
+        <table id="Userstable">
             <tr>
-                <!--<th>Car Id</th>-->
+                <th>UserID</th>
                 <th>Username</th>
                 <th>Name</th>
                 <th>Email</th>
@@ -54,6 +79,10 @@
 <h2>AddUser</h2>
 <div>
     <form method="post">
+        <label for="UserID">UserID: </label>
+        <select id="UserID" name="UserID">
+            <option></option>
+        </select><br />
         <label for="Username">Username:</label>
         <input name="Username" /><br />
         <label for="Password">Password:</label>
@@ -66,16 +95,26 @@
         <input name="Email" /><br />
         <label for="Gender">Gender</label>
         <select name="Gender" >
-        <option>Male</option>
-        <option>Female</option>
+            <option></option>
+            <option>Male</option>
+            <option>Female</option>
+        </select><br />
+        <label for="Role">Role</label>
+        <select name="Role">
+            <option></option>
+            <option>Customer</option>
+            <option>Employee</option>
+            <option>Admin</option>
         </select><br />
         <label for="Personnumber">Personnumber:</label>
         <input name="Personnumber" /><br />
-        <button type="button" onclick="uploadPic">Upload Picture</button>
-        <button type="submit" onclick="clickMe">Save user</button>
+        <button type="button" onclick="uploadPic">Upload Picture</button><br />
+        <button id="AddUser"type="button" >Add</button>
+        <button id="UpdateUser"type="button">Update</button>
+        <button id="RemoveUser" type="button">Remove</button>
     </form>
 </div>
 
 <div>
-    @ViewBag.Message;
+    @ViewBag.Message
 </div>

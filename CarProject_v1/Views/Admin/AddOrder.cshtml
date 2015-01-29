@@ -9,22 +9,28 @@
 
             $('#cars tr').not(':first').not(':last').remove();
             var html = '';
-            for (var i = 0; i < resp.length; i++)
-                html += '<tr><td>' + resp[i].u.CarID +
-                        '</td><td>' + resp[i].v.Manufacturer +
-                        '</td><td>' + resp[i].v.CarModel +
-                        '</td><td>' + resp[i].v.PricePerDay +
-                        '</td><td>' + resp[i].v.PricePerLateDay +
-                        '</td><td>' + resp[i].v.Gear +
-                        '</td><td>' + resp[i].u.Kilometrage +
-                        '</td><td>' + resp[i].l.LocationName +
+            var html2 = '';
+            for (var i = 0; i < resp.length; i++) {
+                html += '<tr><td>' + resp[i].CarID +
+                        '</td><td>' + resp[i].Manufacturer +
+                        '</td><td>' + resp[i].CarModel +
+                        '</td><td>' + resp[i].PricePerDay +
+                        '</td><td>' + resp[i].PricePerLateDay +
+                        '</td><td>' + resp[i].Gear +
+                        '</td><td>' + resp[i].Kilometrage +
+                        '</td><td>' + resp[i].LocationName +
                         '</td></tr>';
+                html2 += '<option>' + resp[i].Manufacturer + ' ' + resp[i].CarModel + '</option>';
+            }
             $("#cars tr:first").first().after(html);
+            $("#carStr").append(html2);
         });
+
         $.get("@Url.Action("GetAllOrders")", function (resp) {
 
             $('#orders tr').not(':first').not(':last').remove();
             var html = '';
+            var html2 = '';
             for (var i = 0; i < resp.length; i++) {
                 var LendDate = new Date(parseInt(resp[i].LendDate.substr(6)));
                 LendDate = LendDate.getMonth() +
@@ -64,19 +70,10 @@
                         '</td><td>' + ReturnDate +
                         '</td><td>' + ActualReturnDate +
                         '</td></tr>';
+                html2 += '<option>' + resp[i].OrderID + '</option>';
             }
             $("#orders tr:first").first().after(html);
-        });
-
-        $.get("@Url.Action("GetAllCars")", function (resp) {
-            var html = '';
-
-            for (var i = 0; i < resp.length; i++) {
-                html += '<option>' + resp[i].v.Manufacturer + ' ' + resp[i].v.CarModel + '</option>';
-
-            }
-            $("#carStr").append(html);
-
+            $("#OrderID").append(html2);
         });
 
         $.get("@Url.Action("GetAllUsers")", function (resp) {
@@ -89,50 +86,88 @@
             $("#Username").append(html);
         });
 
-        $('#ordersend').click(function () {
+         $('#Calculate').click(function () {
+            var dataforserver = $('#carStr').serialize();
+            $.post("@Url.Action("GetCarType")", dataforserver, function (resp, err) {
+                if (err)
+                    console.log(err);
 
-            var dataForServer = $('input option:selected').serialize();
+                var unitPrice = resp.PricePerDay;
+                var lenddate = new Date($('#lenddate').val());
+                var returndate = new Date($('#returndate').val());
+                var diff = new Date(returndate - lenddate);
+                var productTotal;
+                var days = diff / 1000 / 60 / 60 / 24;
+                if (unitPrice && days) {
+                    productTotal = parseFloat(unitPrice) * parseFloat(days);
+                } else {
+                    productTotal = '';
+                }
+                $('#Sum').val(productTotal);
 
-            $.post("@Url.Action("InsertOrder")", dataForServer, function (resp, err) {
+            });
+         });
+
+
+            $('#orderAdd').click(function () {
+
+                var dataForServer = $('form').serialize();
+
+                $.post("@Url.Action("AddOrder")", dataForServer, function (resp, err) {
+
+                    if (err)
+                        console.log(err);
+
+                    if (resp.Status == "OK") {
+                        alert(resp.Status);
+
+                    } else {
+                        alert(resp.Status);
+                    }
+                });
+            });
+             $('#orderUpdate').click(function () {
+
+                 var dataForServer = $('form').serialize();
+
+                 $.post("@Url.Action("UpdateOrder")", dataForServer, function (resp, err) {
+
+                     if (err)
+                         console.log(err);
+
+                     if (resp.Status == "OK") {
+                         alert(resp.Status);
+
+                     } else {
+                         alert(resp.Status);
+                     }
+                 });
+             });
+        $('#orderRemove').click(function () {
+
+            var dataForServer = $('form').serialize();
+
+            $.post("@Url.Action("RemoveOrder")", dataForServer, function (resp, err) {
 
                 if (err)
                     console.log(err);
 
                 if (resp.Status == "OK") {
-                    $('#alertbox').append("Order Added");
-                    addtotable(resp);
+                    alert(resp.Status);
 
                 } else {
-                    $('#alertbox').append(resp.Status.text());
+                    alert(resp.Status);
                 }
             });
         });
-    
-        //$('#Manufacturer').onChange(
-        //function manufacturerOnChange() {
-        ////$('#CarModel option').disabled.removeAttr();
-        ////var manval=$('#Manufacturer').find('option:selected').text();
-        ////load("/Admin/GetCarTypes?Manufacturer="+$('#Manufacturer').find('option:selected').text());
-        ////$.get("Url.Action("GetCarTypes")",$('#Manufacturer').find('option:selected').text(),function(resp){
-        //$.load("/Admin/GetCarTypes?Manufacturer="+$('#Manufacturer').find('option:selected').text()),function(resp){
-        //    var html2 = '';
-        //    for (var i = 0; i < resp.length; i++) {
-        //        html2 += '<option value="'+resp[i].CarModel+'">' + resp[i].CarModel + '</option>';
-        //    }
-        //    $("#CarModel").first().append(html2);
-        //}
-        //}
-    
-    });
-    
 
+    });
 </script>
 <h2>Orders table</h2>
 <div style="border:1px solid;padding:5px;">
     <div>
         <table id="orders">
             <tr>
-                
                 <th>OrderId</th>
                 <th>CarId</th>
                 <th>Manufacturer</th>
@@ -172,23 +207,35 @@
 <div>
     <div>
         <form method="post">
+            <label for="OrderID">OrderID</label>
+            <select id="OrderID" name="OrderID">
+            <option></option>
+            </select><br />
             <label for="carStr">Manufacturer and model: </label>
-            <select id="carStr" name="carStr"></select><br />
+            <select id="carStr" name="carStr">
+            <option></option>
+            </select><br />
             <!--<label for="CarModel">Car Model:</label>
             <select id="CarModel" name="CarModel">
                 <option disabled="disabled">sdgs</option>
             </select><br />-->
             <label for="lenddate">Pick lend date: </label>
-            <input name="lenddate" type="date"/><br />
+            <input id="lenddate" name="lenddate" type="date"/><br />
             <label for="returndate">Pick return date: </label>
-            <input name="returndate" type="date" /><br />
+            <input id="returndate" name="returndate" type="date" /><br />
             <label for="Username">Username: </label>
-            <select id="Username" name="Username"></select><br />
-            <button id="ordersend" type="submit">Save</button>
+            <select id="Username" name="Username">
+            <option></option>
+            </select><br />
+            <button id="Calculate" type="button" onclick="calcProductTotal">Calculate Price</button>
+            <input id="Sum" />
+            <button id="orderAdd" type="button">Save</button>
+            <button id="orderUpdate" type="button">Update</button>
+            <button id="orderRemove" type="button">Remove</button>
         </form>
     </div>
     <div id="alertbox"></div>
     <div>
-        @ViewBag.Message;
+        @ViewBag.Message
     </div>
 </div>

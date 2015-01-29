@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using System.Data.Entity;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json;
+using System.Web.Script.Serialization;
 
 namespace Models
 {
@@ -23,10 +26,15 @@ namespace Models
         public string Name { get; set; }
         [Required,EmailAddress]
         public string Email { get; set; }
-        
+        //[JsonConverter(typeof(StringEnumConverter))]
+        [ScriptIgnore]
         public Genders Gender { get; set; }
+        public string GenderString { get { return Gender.ToString(); } }
         [Required]
+        //[JsonConverter(typeof(StringEnumConverter))]
+        [ScriptIgnore]
         public Roles Role { get; set; }
+        public string RoleString { get { return Role.ToString(); } }
         public byte[] Pic { get; set; }
     }
 }

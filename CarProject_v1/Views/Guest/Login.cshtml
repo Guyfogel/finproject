@@ -4,22 +4,22 @@
 }
 <script src="~/Scripts/jquery-2.1.3.js"></script>
 <script>
-    $(function () {
+    /*$(function () {
 
 
         $('button').click(function () {
             var dataForServer = $('form').serialize();
-            $.post("@Url.Action("Login")", dataForServer, function (resp) {
+            $.post("Url.Action("Login")", dataForServer, function (resp) {
                 console.log(resp);
                 /*if (resp.Status == "OK") {
                     
                 } else {
                     alert(resp.Status);
-                }*/
+                }
                 //document.location = '';
             });
         });
-    });
+    });*/
 
 </script>
 <div>
@@ -29,6 +29,6 @@
         <label for="Password">Password:</label>
         <input name="Password" /><br />
 
-        <button type="button" value="Login">Log In</button>
+        <button type="submit" value="Login">Log In</button>
     </form>
 </div>
